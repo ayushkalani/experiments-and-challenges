@@ -1,5 +1,3 @@
-package com.ayush;
-
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -36,7 +34,7 @@ public class Greencode {
         // rule 5
         if (nunmberOfCpuUsageNull > (int) (lcpuUsage * MAX_CPU_USAGE_NULL)) {
 
-            if (!isRule3Valid(useMemoryUnSorted)) {
+            if (!isRule3Valid(usedMemory)) {
                 rulesProcessedFalse++;
             }
             if (!isRule4Valid(useMemoryUnSorted, lusedMemory)) {
@@ -64,7 +62,7 @@ public class Greencode {
         if (!isRule2Valid(cpuUsageUnSorted, useMemoryUnSorted, cpuUsage[0], usedMemory[0])) {
             rulesProcessedFalse++;
         }
-        if (!isRule3Valid(useMemoryUnSorted)) {
+        if (!isRule3Valid(usedMemory)) {
             rulesProcessedFalse++;
         }
         if (!isRule4Valid(useMemoryUnSorted, lusedMemory)) {
@@ -128,7 +126,8 @@ public class Greencode {
     }
 
     // should not be greater than MEMORY_THRESHOLD
-    public static boolean isRule3Valid(int[] usageMemory) {
+    // using sorted array here so that we will exit quickly
+    public static boolean isRule3Valid(Integer[] usageMemory) {
         for (int i = 0; i < usageMemory.length; i++) {
             if (usageMemory[i] >= MEMORY_THRESHOLD) {
                 return false;
