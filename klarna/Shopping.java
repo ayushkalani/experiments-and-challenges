@@ -1,20 +1,13 @@
 package com.ayush;
 
+
 import java.util.*;
 
 class Shopping {
 
-    public static int compare(Map.Entry<String, Integer> entry1, Map.Entry<String, Integer> entry2) {
-        int ret = entry2.getValue().compareTo(entry1.getValue());
-        if (ret == 0) {// if 0 the are the same then compare the keys
-            return entry1.getKey().compareTo(entry2.getKey());
-        }
-        return ret;
-    }
-
     static List<String> popularShoppingCategories(Map<String, List<String>> usersPurchases) {
         HashMap<String, List<String>> data = getData();
-        HashMap<String, Integer> categoryCountMap = new HashMap<>();
+        Map<String, Integer> categoryCountMap = new TreeMap<>();
         List<String> res = new ArrayList<>();
         int maxCount = 0;
 
@@ -49,8 +42,6 @@ class Shopping {
                 }
             }
         }
-
-
         return res;
     }
 
@@ -75,9 +66,4 @@ class Shopping {
         shoppingMeta.put("laptop", Arrays.asList("Electronics"));
         return shoppingMeta;
     }
-
-
-    public static void main(String[] args) {
-    }
-
 }
