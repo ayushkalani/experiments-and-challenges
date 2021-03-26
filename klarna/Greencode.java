@@ -1,3 +1,5 @@
+package com.ayush;
+
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -24,16 +26,18 @@ public class Greencode {
         if (nunmberOfCpuUsageNull == lcpuUsage && nunmberOfUsageMemoryNull == lusedMemory) {
             return processRules(Integer.MAX_VALUE);
         }
+        // remove null values from array
+        cpuUsage = Arrays.stream(cpuUsage).filter(s -> (s != null)).toArray(Float[]::new);
+        usedMemory = Arrays.stream(usedMemory).filter(s -> (s != null)).toArray(Integer[]::new);
 
-        float[] cpuUsageUnSorted = toFloatArray(cpuUsage);
-        int[] useMemoryUnSorted = toIntArray(usedMemory);
+        Float[] cpuUsageUnSorted = Arrays.copyOf(cpuUsage, cpuUsage.length);
+        Integer[] useMemoryUnSorted = Arrays.copyOf(usedMemory, usedMemory.length);
 
         Arrays.sort(usedMemory, Collections.reverseOrder());
         Arrays.sort(cpuUsage, Collections.reverseOrder());
 
         // rule 5
         if (nunmberOfCpuUsageNull > (int) (lcpuUsage * MAX_CPU_USAGE_NULL)) {
-
             if (!isRule3Valid(usedMemory)) {
                 rulesProcessedFalse++;
             }
@@ -41,7 +45,6 @@ public class Greencode {
                 rulesProcessedFalse++;
             }
             return processRules(rulesProcessedFalse);
-
         }
 
         // rule 6
@@ -75,29 +78,11 @@ public class Greencode {
         int ans = 0;
         int l = src.length;
         for (int i = 0; i < l; i++) {
-            if (src[i] == null) { ++ans; }
+            if (src[i] == null) {
+                ++ans;
+            }
         }
         return ans;
-    }
-
-    public static int[] toIntArray(Integer[] arr) {
-        int[] ret = new int[arr.length];
-        for (int i = 0; i < ret.length; i++) {
-            if (arr[i] != null) {
-                ret[i] = arr[i];
-            }
-        }
-        return ret;
-    }
-
-    public static float[] toFloatArray(Float[] arr) {
-        float[] ret = new float[arr.length];
-        for (int i = 0; i < ret.length; i++) {
-            if (arr[i] != null) {
-                ret[i] = arr[i];
-            }
-        }
-        return ret;
     }
 
     public static String processRules(int falseRules) {
@@ -115,7 +100,8 @@ public class Greencode {
     }
 
     // both max values should not occur at the same time
-    public static boolean isRule2Valid(float[] cpuUsage, int[] usedMemory, float cpuMax, int memMax) {
+    // arrays can be of different length
+    public static boolean isRule2Valid(Float[] cpuUsage, Integer[] usedMemory, float cpuMax, int memMax) {
         int n = Math.min(cpuUsage.length, usedMemory.length);
         for (int i = 0; i < n; i++) {
             if (cpuUsage[i] == cpuMax && usedMemory[i] == memMax) {
@@ -126,19 +112,13 @@ public class Greencode {
     }
 
     // should not be greater than MEMORY_THRESHOLD
-    // using sorted array here so that we will exit quickly
     public static boolean isRule3Valid(Integer[] usageMemory) {
-        for (int i = 0; i < usageMemory.length; i++) {
-            if (usageMemory[i] >= MEMORY_THRESHOLD) {
-                return false;
-            }
-        }
-        return true;
+        return (usageMemory[0] < MEMORY_THRESHOLD);
     }
+
     // should not increase in 3 consecutive values
-    public static boolean isRule4Valid(int[] usageMemory, int l) {
-        int j = 1, k = 2;
-        for (int i = 0; i < l - 2; i++, j++, k++) {
+    public static boolean isRule4Valid(Integer[] usageMemory, int l) {
+        for (int i = 0, j = 1, k = 2; i < l - 2; i++, j++, k++) {
             if (usageMemory[i] < usageMemory[j] && usageMemory[j] < usageMemory[k]) {
                 return false;
             }
@@ -147,8 +127,8 @@ public class Greencode {
     }
 
     public static void main(String[] args) {
-        Float[] cpuUsage = {0.2f, 0.5f, 0.8f, 0.5f};
-        Integer[] usedMemory = {200, 500, 150, 3124, 234324, 234892374};
+        Float[] cpuUsage = {0.2f, 0.5f, 0.8f, 0.5f, null, null, null, null, null};
+        Integer[] usedMemory = {200, 500, 150, 3124, 8, 1, null, null, null, null, null};
         System.out.println(verify(cpuUsage, usedMemory));
     }
 }
